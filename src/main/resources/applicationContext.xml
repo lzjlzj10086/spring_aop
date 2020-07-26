@@ -1,0 +1,35 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="target" class="com.aopInterface.Target"></bean>
+    <bean id="myAspect" class="com.aopInterface.MyAspect"></bean>
+
+    <!--<bean id="target" class="com.aopclass.Target"></bean>
+    <bean id="myAspect02" class="com.aopclass.MyAspect"></bean>-->
+    <aop:config>
+        <aop:aspect ref="myAspect">
+            <!--切点表达式写法
+                execution(void com.aopInterface.Target.*(..)
+                          * com.aopInterface.*.*(..)
+                          * com.aopInterface..*.*(..)
+            -->
+            <!--抽取切点表达式-->
+            <aop:pointcut id="Mypointcut" expression="execution(* com.aopInterface.*.*(..))"/>
+
+            <aop:before method="Mybefore" pointcut="execution(public void com.aopInterface.Target.save())"></aop:before>
+            <aop:after-returning method="afterRetruning" pointcut="execution(* com.aopInterface.*.*(..))"></aop:after-returning>
+            <aop:around method="around" pointcut="execution(* com.aopInterface.*.*(..))"></aop:around>
+            <aop:after-throwing method="after" pointcut="execution(* com.aopInterface.*.*(..))"></aop:after-throwing>
+            <aop:after method="after" pointcut-ref="Mypointcut"></aop:after>
+        </aop:aspect>
+    </aop:config>
+    <!--<aop:config>
+        <aop:aspect ref="myAspect02">
+            &lt;!&ndash;抽取切点表达式&ndash;&gt;
+            <aop:pointcut id="Mypointcut" expression="execution(* com.aopclass.*.*(..))"/>
+            <aop:after method="after" pointcut-ref="Mypointcut"></aop:after>
+        </aop:aspect>
+    </aop:config>-->
+</beans>
